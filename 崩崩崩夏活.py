@@ -81,48 +81,54 @@ def move():
     elif num == 3:
         y -= 1
         act = "←"  # 向左
-    if willgo(x,y)==1 and bord[x][y]==3:
-        x_box=x
-        y_box=y
-        m=1
-        while m!=0:
-            if act=="↓":
-                if x_box+1>=width or Map[x_box+1][y_box] in [1,4]:
-                    break
-                x_box+=1
-                if Map[x_box][y_box]==2:    break
-            elif act=="↑":
-                if x_box-1<0 or Map[x_box-1][y_box] in [1,4]:
-                    break
-                x_box-=1
-                if Map[x_box][y_box] == 2:    break
-            elif act=="→":
-                if y_box>=length or Map[x_box][y_box+1] in [1,4]:
-                    break
-                y_box+=1
-                if Map[x_box][y_box] == 2:    break
-            elif act=="←":
-                if y_box-1<0 or Map[x_box][y_box-1] in [1,4]:
-                    break
-                y_box-=1
-                if Map[x_box][y_box] == 2:    break
-        Map[x_box][y_box]=1
-        Map[x][y]=bord[x][y] #推箱子时人物位置未变化
-        return act
-    elif willgo(x,y)==1:
+
+    if willgo(x,y)==1: #箱子事件
         x_box=x
         y_box=y
         if act=="↓":
-            Map[x_box+1][y_box]=1
+            x_box+=1
+            if Map[x_box][y_box]==3:
+                m=1
+                while m!=0:
+                    if x_box + 1 >= width or Map[x_box + 1][y_box] in [1, 4]:
+                        break
+                    x_box+=1
+                    if Map[x_box][y_box]==2:
+                        break
         elif act=="↑":
-            Map[x_box-1][y_box]=1
+            x_box -= 1
+            if Map[x_box][y_box] == 3:
+                m = 1
+                while m != 0:
+                    if x_box - 1 < 0 or Map[x_box - 1][y_box] in [1, 4]:
+                        break
+                    x_box -= 1
+                    if Map[x_box][y_box] == 2:
+                        break
         elif act=="→":
-            Map[x_box][y_box+1]=1
+            y_box+=1
+            if Map[x_box][y_box]==3:
+                m=1
+                while m!=0:
+                    if y_box + 1 >= length or Map[x_box][y_box + 1] in [1, 4]:
+                        break
+                    y_box+=1
+                    if Map[x_box][y_box]==2:
+                        break
         elif act=="←":
-            Map[x_box][y_box-1]=1
+            y_box_=1
+            if Map[x_box][y_box]==3:
+                m=1
+                while m!=0:
+                    if y_box - 1 < 0 or Map[x_box][y_box - 1] in [1, 4]:
+                        break
+                    y_box-=1
+                    if Map[x_box][y_box]==2:
+                        break
+        Map[x_box][y_box] = 1
         Map[x][y]=bord[x][y]
         return act
-    if willgo(x,y)==3: #人滑块
+    if willgo(x,y)==3: #滑块事件
         m=1
         while m!=0:
             if act == "↓":
@@ -159,12 +165,12 @@ def goto(x, y):
         cnt += 1
         Step += step
         a,b= getplace(Map)
-        if cnt>=100:
+        if cnt>=200:
             break
     return cnt, Step
 
 Min = 99999
-for i in range(1000):
+for i in range(10000000):
     Map = [[4, 4, 2, 2, 2, 2, 2, 2],
            [4, 2, 2, 2, 2, 2, 2, 2],
            [4, 2, 2, 2, 4, 2, 2, 2],
@@ -190,6 +196,8 @@ for i in range(1000):
         Min = cnt
         Step0 = Step
         Map0 = Map
+    if Min<150:
+        break
 print(Min, Step0)
 print(Map0)
 
